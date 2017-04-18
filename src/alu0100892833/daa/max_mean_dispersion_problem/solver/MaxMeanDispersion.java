@@ -1,9 +1,9 @@
-package alu0100892833.daa.max_mean_dispersion;
+package alu0100892833.daa.max_mean_dispersion_problem.solver;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import alu0100892833.daa.graph.Graph;
+import alu0100892833.daa.max_mean_dispersion_problem.graph.Graph;
 
 /**
  * @author Óscar Darias Plasencia

@@ -1,6 +1,9 @@
-package alu0100892833.daa.graph;
+package alu0100892833.daa.max_mean_dispersion_problem.graph;
 
 /**
+ * This class allows to represent links between nodes in a graph.
+ * It saves the origin and destination nodes and the affinity of the connection between both.
+ * This links are reversible: a link from a node A to a node B exists also from B to A.
  * @author Óscar Darias Plasencia
  * @since 18/04/2017
  */

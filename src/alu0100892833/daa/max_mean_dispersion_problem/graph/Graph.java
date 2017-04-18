@@ -1,8 +1,10 @@
-package alu0100892833.daa.graph;
+package alu0100892833.daa.max_mean_dispersion_problem.graph;
 
 import java.util.ArrayList;
 
 /**
+ * This class allows to represent Graphs adapted to work for the Max-Mean-Dispersion Problem solver.
+ * It saves an ArrayList of Node objects.
  * @author Óscar Darias Plasencia
  * @since 18/04/2017
  */
@@ -25,6 +27,7 @@ public class Graph {
         return null;
     }
 
+    @Deprecated
     public void addNode(int identifier) {
         Node newNode = new Node(identifier);
         if (!nodes.contains(newNode))
