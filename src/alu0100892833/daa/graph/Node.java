@@ -35,4 +35,9 @@ class Node {
         Node other = (Node) o;
         return (getIdentifier() == other.getIdentifier());
     }
+
+    @Override
+    public String toString() {
+        return Integer.toString(getIdentifier());
+    }
 }
