@@ -1,5 +1,7 @@
 package alu0100892833.daa.max_mean_dispersion_problem.graph;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
+
 import java.util.HashSet;
 
 /**
@@ -9,7 +11,7 @@ import java.util.HashSet;
  * @author Óscar Darias Plasencia
  * @since 18/04/2017
  */
-class Node {
+public class Node {
     private int identifier;
     private HashSet<Link> links;
 
@@ -26,9 +28,52 @@ class Node {
         return this.links;
     }
 
+    /**
+     * Specify a new Link for the Node.
+     * @param to Destination Node, that will also be added this new Link if it has not already.
+     * @param affinity The affinity value of this new Link.
+     */
     void addLink(Node to, int affinity) {
-        links.add(new Link(this, to, affinity));
-        to.addLink(this, affinity);
+        Link newLink = new Link(this, to, affinity);
+        links.add(newLink);
+        if (!to.containsLink(newLink))
+            to.addLink(this, affinity);
+    }
+
+    /**
+     * Obtain the affinity value of the link to the given Node, specified by its identifier. Uses the method {@link #getLinkTo(int)}.
+     * @param destinationNode
+     * @return
+     * @throws InvalidArgumentException
+     */
+    double getAffinityToNode(int destinationNode) throws InvalidArgumentException {
+        return getLinkTo(destinationNode).getAffinity();
+    }
+
+    /**
+     * Determines if this Node has the given Link.
+     * @param link
+     * @return
+     */
+    boolean containsLink(Link link) {
+        for (Link connection : getLinks())
+            if (connection.equals(link))
+                return true;
+        return false;
+    }
+
+    /**
+     * Obtain the Link from this Node to another one given by its identifier.
+     * @param destinationNode
+     * @return
+     * @throws InvalidArgumentException
+     */
+    Link getLinkTo(int destinationNode) throws InvalidArgumentException {
+        for (Link object : links) {
+            if (object.getTo().getIdentifier() == destinationNode)
+                return object;
+        }
+        throw new InvalidArgumentException(new String[]{"There is not a link between " + getIdentifier() + " and " + destinationNode});
     }
 
     @Override

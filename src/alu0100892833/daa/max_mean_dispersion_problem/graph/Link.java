@@ -7,9 +7,9 @@ package alu0100892833.daa.max_mean_dispersion_problem.graph;
  * @author Óscar Darias Plasencia
  * @since 18/04/2017
  */
-class Link {
+public class Link {
     private Node from, to;
-    private int affinity;
+    private double affinity;
 
     Link(Node from, Node to, int affinity) {
         this.to = to;
@@ -21,24 +21,12 @@ class Link {
         return from;
     }
 
-    public void setFrom(Node from) {
-        this.from = from;
-    }
-
     public Node getTo() {
         return to;
     }
 
-    public void setTo(Node to) {
-        this.to = to;
-    }
-
-    public int getAffinity() {
+    public double getAffinity() {
         return affinity;
-    }
-
-    public void setAffinity(int affinity) {
-        this.affinity = affinity;
     }
 
     @Override
