@@ -24,7 +24,7 @@ public class Matrix {
     /*******************************
      *********** ATTRIBUTES ********
      *************************/
-    private ArrayList<Integer> matriz ;
+    private ArrayList<Integer> matriz;
     private int m = 0;
     private int n = 0;
 
