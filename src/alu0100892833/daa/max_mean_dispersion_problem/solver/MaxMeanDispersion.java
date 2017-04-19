@@ -6,6 +6,8 @@ import java.io.IOException;
 import alu0100892833.daa.max_mean_dispersion_problem.graph.Graph;
 
 /**
+ * This class instantiates objects that are able to solve de Max-Mean-Dispersion problem.
+ * It is necessary to specify a text file with a particular syntax describing the problem.
  * @author Óscar Darias Plasencia
  * @since 18/04/2017
  */
