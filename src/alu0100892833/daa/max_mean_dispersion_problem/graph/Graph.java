@@ -10,6 +10,7 @@ import java.util.ArrayList;
  * It saves an ArrayList of Node objects.
  * @author Óscar Darias Plasencia
  * @since 18/04/2017
+ * @deprecated
  */
 public class Graph {
 
@@ -103,6 +104,7 @@ public class Graph {
     }
 
 
+
     /**
      * This method allows to obtain the best Node object possible to be added to the solution.
      * It looks for the best candidates from all over the Graph, ignoring those specified in the excluding ArrayList.
@@ -129,28 +131,12 @@ public class Graph {
     }
 
 
-    /*public Node getWorstNextNode(ArrayList<Integer> excluding) throws InvalidArgumentException {
+    /*public Node getWorstNextNode(ArrayList<Integer> excluding) throws InvalidArgumentException) {
 
     }*/
 
-    /**
-     * This method generates a Restricted List of Candidates for the GRASP algorithm. It just selects as many elements as indicated by the parameter, using the getBetterNextNode method.
-     * @param length Number of elements that will compose the RCL.
-     * @param excluding ArrayList of non-selectable Nodes, specified by their identifiers. This ArrayList should be composed by the Nodes that are already part of the solution.
-     * @return
-     * @throws InvalidArgumentException
-     */
-    public ArrayList<Integer> generateRCL(int length, ArrayList<Integer> excluding) throws InvalidArgumentException {
-        ArrayList<Integer> rcl = new ArrayList<>();
-        for (int i = 0; i < length; i++) {
-            Node newCandidate = getBetterNextNode(excluding);
-            if (newCandidate == null)
-                return null;
-            rcl.add(newCandidate.getIdentifier());
-            excluding.add(newCandidate.getIdentifier());
-        }
-        return rcl;
-    }
+
+
 }
 
 

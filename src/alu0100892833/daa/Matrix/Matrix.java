@@ -29,56 +29,7 @@ public class Matrix {
     private int n = 0;
 
 
-    /**
-     * Constructor de un objeto de tipo Matriz
-     * @param String String con el fichero que contiene la definción de la matriz
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public Matrix(String filename) throws IOException{
 
-        String linea;
-        FileReader fich = new FileReader(filename);
-        BufferedReader bf = new BufferedReader(fich);
-        matriz = new ArrayList<Integer>();
-        this.m = Integer.parseInt(linea = bf.readLine());
-        this.n = Integer.parseInt(linea = bf.readLine());
-
-        //las matriz es cuadrada y de dimensión par
-        if((m != n) && (m % 2 == 1)) {
-            throw new IllegalArgumentException("Las Matrices no pueden ser multiplicadas por Strassen");
-        }
-
-        while((linea = bf.readLine())!=null) {
-            if(!linea.trim().equals("")){
-                String valores [] = linea.split("\\s+");
-                for(int j = 0; j < this.n; j++){
-                    matriz.add(Integer.parseInt(valores[j]));
-                }
-            }
-        }
-        if (null != fich){
-            bf.close();
-        }
-    }
-
-
-    /**
-     * Constructor de un objeto de tipo Matriz
-     * @param ArrayList<Integer> array con todos los elementos de la matriz
-     */
-    public Matrix(ArrayList<Integer> array){
-
-        matriz = new ArrayList<Integer>();
-        for(int i = 0; i < array.size(); i++){
-            matriz.add(array.get(i));
-        }
-
-        double a = Math.log(array.size()) / Math.log(2);
-        this.setM((int) a);
-        this.setN((int) a);
-
-    }
 
     /**
      * Constructor copia de un objeto de tipo Matriz
@@ -96,63 +47,16 @@ public class Matrix {
 
     }
 
+    public Matrix(int rows, int cols) {
+        this.m = rows;
+        this.n = cols;
 
-    /**
-     * Constructor por defecto de la clase
-     */
-    public Matrix() {
-        matriz = new ArrayList<Integer>();
-    }
-
-    /**
-     * Constructor de un objeto de tipo Matriz
-     * @param Matriz SubMatriz11
-     * @param Matriz SubMatriz12
-     * @param Matriz SubMatriz21
-     * @param Matriz SubMatriz22
-     */
-    public Matrix(Matrix sub11, Matrix sub12, Matrix sub21, Matrix sub22) {
-        matriz = new ArrayList<Integer>();
-        this.setM(sub11.getN()*2);
-        this.setN(sub11.getN()*2);
-        for(int mm = 0; mm < sub11.getM() * 2 ; mm++){
-            for(int nn = 0; nn < sub11.getN() * 2; nn++){
-
-                //está en el primer cuadrante
-                if((mm < sub11.getM()) && (nn < sub11.getN())){
-                    matriz.add(sub11.get(mm, nn));
-                }
-                //está en el segundo cuadrante
-                else if((mm < sub12.getM()) && (nn >= sub12.getN())){
-                    matriz.add(sub12.get(mm, nn - sub12.getN()));
-                }
-                //está en el tercer cuadrante
-                else if((mm >= sub21.getM()) && (nn < sub21.getN())){
-                    matriz.add(sub21.get(mm - sub21.getM(), nn));
-                }
-                //está en el cuarto cuadrante
-                else if((mm >= sub22.getM()) && (nn >= sub22.getN())){
-                    matriz.add(sub22.get(mm - sub22.getM(), nn - sub22.getN()));
-                }
-            }
-        }
-    }
-
-    /**
-     * Constructor de un objeto de tipo Matriz con todos sus elementos a cero
-     * @param int tamaño del vector que almacena la matriz
-     */
-    public Matrix(int size) {
-
-        double a = Math.log(size) / Math.log(2);
-        this.setM((int) a);
-        this.setN((int) a);
-
-        matriz = new ArrayList(size);
-        for(int i = 0; i < size; i++){
+        matriz = new ArrayList(m * n);
+        for(int i = 0; i < m * n; i++){
             matriz.add(0);
         }
     }
+
 
     /**
      * Getter del numero de filas de la matriz
@@ -201,7 +105,7 @@ public class Matrix {
      * @return int
      */
     private int getPos(int i, int j){
-        return(i*this.n + j);
+        return (i * this.n + j);
     }
 
     /**
@@ -251,38 +155,6 @@ public class Matrix {
 
     }
 
-    /**
-     * Método de clase que se encarga de sumar dos matrices y devolver la matriz resultante
-     * @param Matriz matriz para sumar
-     * @param Matriz matriz para sumar
-     * @return Matriz con el resultado
-     */
-    public static Matrix suma(Matrix a, Matrix b) {
-        ArrayList<Integer> auxiliar = new ArrayList<Integer>();
-        for(int i = 0; i < a.getM(); i++){
-            for(int j = 0; j < a.getN(); j++){
-                auxiliar.add(a.get(i, j) + b.get(i,j));
-            }
-        }
 
-        Matrix c = new Matrix(auxiliar);
-        return c;
-    }
 
-    /**
-     * Método de clase que se encarga de restar dos matrices y devolver la matriz resultante
-     * @param Matriz matriz a la que se le resta
-     * @param Matriz matriz para restar
-     * @return Matriz con el resultado
-     */
-    public static Matrix resta(Matrix a, Matrix b) {
-        ArrayList<Integer> auxiliar = new ArrayList<Integer>();
-        for(int i = 0; i < a.getM(); i++){
-            for(int j = 0; j < a.getN(); j++){
-                auxiliar.add(a.get(i, j) - b.get(i,j));
-            }
-        }
-        Matrix c = new Matrix(auxiliar);
-        return c;
-    }
 }

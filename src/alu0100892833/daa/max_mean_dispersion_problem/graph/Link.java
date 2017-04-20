@@ -6,6 +6,7 @@ package alu0100892833.daa.max_mean_dispersion_problem.graph;
  * This links are reversible: a link from a node A to a node B exists also from B to A.
  * @author Óscar Darias Plasencia
  * @since 18/04/2017
+ * @deprecated
  */
 public class Link {
     private Node from, to;

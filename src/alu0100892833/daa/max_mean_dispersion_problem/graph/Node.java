@@ -10,6 +10,7 @@ import java.util.HashSet;
  * Every Link added from a Node "this" to other Node is automatically added in reverse.
  * @author Óscar Darias Plasencia
  * @since 18/04/2017
+ * @deprecated
  */
 public class Node {
     private int identifier;

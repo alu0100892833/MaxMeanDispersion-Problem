@@ -10,13 +10,12 @@ public class Main {
     public static void main(String[] args) {
         try {
             MaxMeanDispersion problemSolver = new MaxMeanDispersion(args[0]);
-            //problemSolver.greedyConstructiveAlgorithm();
+            problemSolver.greedyConstructiveAlgorithm();
+            problemSolver.greedyDestructiveAlgorithm();
             problemSolver.graspAlgorithm(BIG_RCL);
             problemSolver.graspAlgorithm(SMALL_RCL);
         } catch(IndexOutOfBoundsException e) {
-            System.err.println("YOU NEED TO SPECIFY THE PROBLEM´S FILE NAME.");
-            e.printStackTrace();
-        } catch (InvalidArgumentException e) {
+            System.err.println("YOU MAY NEED TO SPECIFY THE PROBLEM´S FILE NAME.");
             e.printStackTrace();
         }
     }

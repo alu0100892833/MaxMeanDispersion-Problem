@@ -1,7 +1,7 @@
 package alu0100892833.daa.max_mean_dispersion_problem.solver;
 
+import alu0100892833.daa.Matrix.Position;
 import alu0100892833.daa.max_mean_dispersion_problem.graph.*;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,7 +18,7 @@ import java.util.Random;
  */
 public class MaxMeanDispersion {
 
-    private Graph problemGraph;
+    private GraphMatrix problemGraph;
     private ArrayList<Integer> solution;
 
 
@@ -32,10 +32,11 @@ public class MaxMeanDispersion {
         BufferedReader bReader = null;
         try {
             bReader = new BufferedReader(new FileReader(filename));
-            problemGraph = new Graph(Integer.parseInt(bReader.readLine()));
+            int size = Integer.parseInt(bReader.readLine());
+            problemGraph = new GraphMatrix(size);
 
-            for (int i = 1; i < problemGraph.size(); i++)
-                for (int j = i + 1; j <= problemGraph.size(); j++) {
+            for (int i = 1; i < problemGraph.getSize(); i++)
+                for (int j = i + 1; j <= problemGraph.getSize(); j++) {
                     int value = Integer.parseInt(bReader.readLine());
                     problemGraph.addLink(i, j, value);
                 }
@@ -70,7 +71,7 @@ public class MaxMeanDispersion {
         return solution;
     }
 
-    public Graph getProblemGraph() {
+    public GraphMatrix getProblemGraph() {
         return problemGraph;
     }
 
@@ -87,6 +88,10 @@ public class MaxMeanDispersion {
             getSolution().add(identifier);
     }
 
+    /**
+     * This method allows to remove a node from the solution.
+     * @param identifier
+     */
     private void removeFromSolution(int identifier) {
         if (getSolution().contains(identifier))
             getSolution().remove(getSolution().indexOf(identifier));
@@ -97,7 +102,7 @@ public class MaxMeanDispersion {
      * It is calculated dividing the summation of all solution connection´s affinity by the number of nodes in the solution.
      * @return Average dispersion (Double).
      */
-    public double averageDispersion() throws InvalidArgumentException {
+    private double averageDispersion() {
         double numerator = 0.0;
         for (int from = 0; from < getSolution().size() - 1; from++)
             for (int to = from + 1; to < getSolution().size(); to++) {
@@ -110,37 +115,55 @@ public class MaxMeanDispersion {
      * This method allows to add a new Node identifier to the solution, just if doing it improves that solution.
      * @param identifier
      * @return a boolean value that specifies if the value was added (true) or not (false)
-     * @throws InvalidArgumentException
      */
-    public boolean addIfImproves(int identifier) throws InvalidArgumentException {
-        double currentDispersion = averageDispersion();
-        addToSolution(identifier);
-        double newDispersion = averageDispersion();
-        if (currentDispersion > newDispersion) {
-            removeFromSolution(identifier);
+    private boolean addIfImproves(int identifier) {
+        if (checkIfImproves(identifier, true)) {
+            addToSolution(identifier);
+            return true;
+        } else
             return false;
-        }
+    }
+
+    /**
+     * This method allows to check if adding or removing a Node to or from the solution makes it better.
+     * @param identifier
+     * @param adding boolean value that indicates the function if the Node is candidate to be added or removed.
+     * @return True or false, if it improves the solution or not.
+     */
+    private boolean checkIfImproves(int identifier, boolean adding) {
+        double currentDispersion = averageDispersion();
+        if (adding)
+            addToSolution(identifier);
+        else
+            removeFromSolution(identifier);
+        double newDispersion = averageDispersion();
+        if (adding)
+            removeFromSolution(identifier);
+        else
+            addToSolution(identifier);
+
+        if (currentDispersion > newDispersion)
+            return false;
         return true;
     }
 
     /**
      * This method solves the problem using a Greedy Constructive Algorithm. When it finishes, prints the solution on the terminal.
-     * @throws InvalidArgumentException
      */
-    public void greedyConstructiveAlgorithm() throws InvalidArgumentException {
+    public void greedyConstructiveAlgorithm() {
         reset();
 
         // ADD THE LINK WITH THE HIGHEST AFFINITY
-        Link highestAffinityLink = getProblemGraph().getHighestAffinityLink();
-        addToSolution(highestAffinityLink.getFrom().getIdentifier());
-        addToSolution(highestAffinityLink.getTo().getIdentifier());
+        Position highestAffinityLink = getProblemGraph().getHighestAffinityLink();
+        addToSolution(highestAffinityLink.getX());
+        addToSolution(highestAffinityLink.getY());
 
         // LOOK FOR THE NEXT NODE THAT IMPROVES THE SOLUTION
         // ONCE THE SOLUTION IS NOT CHANGED, THE ALGORITHM HAS FINISHED
         boolean changed = true;
         while (changed) {
-            Node nextBetterNode = getProblemGraph().getBetterNextNode(getSolution());
-            changed = addIfImproves(nextBetterNode.getIdentifier());
+            int nextBetterNode = getProblemGraph().getBetterNextNode(getSolution());
+            changed = addIfImproves(nextBetterNode);
         }
 
         // PRINT THE SOLUTION
@@ -150,29 +173,55 @@ public class MaxMeanDispersion {
         System.out.println("===================================================================");
     }
 
-
-    public void greedyDestructiveAlgorithm() throws InvalidArgumentException {
+    /**
+     * This method solves the problem using a Greedy Destructive Algorithm.
+     */
+    public void greedyDestructiveAlgorithm() {
         reset();
+        boolean changed = true;
+        ArrayList<Integer> discardedCandidates = new ArrayList<>();
 
         // CREATE AN INITIAL SOLUTION WITH ALL NODES OF THE GRAPH
-        for (int i = 1; i <= getProblemGraph().size(); i++)
+        for (int i = 1; i <= getProblemGraph().getSize(); i++)
             addToSolution(i);
 
+        // REMOVE THE LINK WITH THE LOWEST AFFINITY
+        Position lowestAffinityLink = getProblemGraph().getLowestAffinityLink();
+        removeFromSolution(lowestAffinityLink.getX());
+        removeFromSolution(lowestAffinityLink.getY());
+        discardedCandidates.add(lowestAffinityLink.getX());
+        discardedCandidates.add(lowestAffinityLink.getY());
+
+        // LOOK FOR THE NEXT NODE TO ELIMINATE, SO THE SOLUTION CAN BE IMPROVED
+        // ONCE THE SOLUTION IS NOT CHANGED, THE ALGORITHM HAS FINISHED
+        while (changed) {
+            int nextWorstNode = getProblemGraph().getWorstNextNode(discardedCandidates);
+            changed = checkIfImproves(nextWorstNode, false);
+            if (changed) {
+                removeFromSolution(nextWorstNode);
+                discardedCandidates.add(nextWorstNode);
+            }
+        }
+
+        // PRINT THE SOLUTION
+        System.out.println("===================================================================");
+        System.out.println("GREEDY DESTRUCTIVE ALGORITHM: " + getSolution());
+        System.out.println("AVERAGE DISPERSION: " + averageDispersion());
+        System.out.println("===================================================================");
     }
 
 
     /**
      * This method solves the problem using a GRASP algorithm. It can also be used to generate an initial solution for more complex algorithms.
      * @param rclSize The size of the Restricted Candidate List.
-     * @throws InvalidArgumentException
      */
-    public void graspAlgorithm(int rclSize) throws InvalidArgumentException {
+    public void graspAlgorithm(int rclSize) {
         reset();
         Random randSelector = new Random();
 
         boolean changed = true;
         while (changed) {
-            ArrayList<Integer> rcl = getProblemGraph().generateRCL(rclSize, new ArrayList<>(getSolution()));
+            ArrayList<Integer> rcl = generateRCL(rclSize, new ArrayList<>(getSolution()));
             if (rcl == null)
                 break;
             int selectedCandidate = rcl.get(randSelector.nextInt(rcl.size()));
@@ -186,7 +235,24 @@ public class MaxMeanDispersion {
         System.out.println("===================================================================");
     }
 
-
+    /**
+     * This method generates a Restricted List of Candidates for the GRASP algorithm. It just selects as many elements as indicated by the parameter, using the getBetterNextNode method.
+     * @param length Number of elements that will compose the RCL.
+     * @param excluding ArrayList of non-selectable Nodes, specified by their identifiers. This ArrayList should be composed by the Nodes that are already part of the solution.
+     * @return
+     */
+    private ArrayList<Integer> generateRCL(int length, ArrayList<Integer> excluding) {
+        ArrayList<Integer> rcl = new ArrayList<>();
+        while (rcl.size() < length) {
+            int newCandidate = getProblemGraph().getBetterNextNode(excluding);
+            if (newCandidate == -1)
+                return null;
+            if (checkIfImproves(newCandidate, true))
+                rcl.add(newCandidate);
+            excluding.add(newCandidate);
+        }
+        return rcl;
+    }
 }
 
 
