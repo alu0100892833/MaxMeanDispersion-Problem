@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             MaxMeanDispersion problemSolver = new MaxMeanDispersion(args[0]);
-            problemSolver.greedyConstructiveAlgorithm();
+            //problemSolver.greedyConstructiveAlgorithm();
             problemSolver.graspAlgorithm(BIG_RCL);
             problemSolver.graspAlgorithm(SMALL_RCL);
         } catch(IndexOutOfBoundsException e) {

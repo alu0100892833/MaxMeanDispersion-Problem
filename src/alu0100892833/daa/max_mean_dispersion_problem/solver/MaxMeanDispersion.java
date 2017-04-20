@@ -82,12 +82,12 @@ public class MaxMeanDispersion {
      * This method allows to add a new Node (its identifier) to the solution.
      * @param identifier
      */
-    public void addToSolution(int identifier) {
+    private void addToSolution(int identifier) {
         if (!getSolution().contains(identifier))
             getSolution().add(identifier);
     }
 
-    public void removeFromSolution(int identifier) {
+    private void removeFromSolution(int identifier) {
         if (getSolution().contains(identifier))
             getSolution().remove(getSolution().indexOf(identifier));
     }
@@ -151,6 +151,16 @@ public class MaxMeanDispersion {
     }
 
 
+    public void greedyDestructiveAlgorithm() throws InvalidArgumentException {
+        reset();
+
+        // CREATE AN INITIAL SOLUTION WITH ALL NODES OF THE GRAPH
+        for (int i = 1; i <= getProblemGraph().size(); i++)
+            addToSolution(i);
+
+    }
+
+
     /**
      * This method solves the problem using a GRASP algorithm. It can also be used to generate an initial solution for more complex algorithms.
      * @param rclSize The size of the Restricted Candidate List.
@@ -165,7 +175,8 @@ public class MaxMeanDispersion {
             ArrayList<Integer> rcl = getProblemGraph().generateRCL(rclSize, new ArrayList<>(getSolution()));
             if (rcl == null)
                 break;
-            changed = addIfImproves(rcl.get(randSelector.nextInt(rcl.size())));
+            int selectedCandidate = rcl.get(randSelector.nextInt(rcl.size()));
+            changed = addIfImproves(selectedCandidate);
         }
 
         // PRINT THE SOLUTION

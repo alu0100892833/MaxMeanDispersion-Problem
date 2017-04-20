@@ -1,6 +1,7 @@
 package alu0100892833.daa.max_mean_dispersion_problem.graph;
 
 import com.sun.javaws.exceptions.InvalidArgumentException;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 
 import java.util.ArrayList;
 
@@ -126,6 +127,11 @@ public class Graph {
             return null;
         return getNode(betterNode);
     }
+
+
+    /*public Node getWorstNextNode(ArrayList<Integer> excluding) throws InvalidArgumentException {
+
+    }*/
 
     /**
      * This method generates a Restricted List of Candidates for the GRASP algorithm. It just selects as many elements as indicated by the parameter, using the getBetterNextNode method.
