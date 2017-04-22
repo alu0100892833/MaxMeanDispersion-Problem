@@ -14,6 +14,7 @@ public class Main {
             problemSolver.greedyDestructiveAlgorithm();
             problemSolver.graspAlgorithm(BIG_RCL);
             problemSolver.graspAlgorithm(SMALL_RCL);
+            problemSolver.multiBootAlgorithm(4);
         } catch(IndexOutOfBoundsException e) {
             e.printStackTrace();
         }

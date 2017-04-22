@@ -258,6 +258,17 @@ public class MaxMeanDispersion {
         }
         return rcl;
     }
+
+    public void multiBootAlgorithm(int nBoots) {
+        reset();
+        ArrayList<ArrayList<Integer>> initialSolutions = new ArrayList<>();
+        for (int i = 0; i < nBoots; i++) {
+            graspAlgorithm(2);
+            System.out.println(getSolution());
+            initialSolutions.add(getSolution());
+            reset();
+        }
+    }
 }
 
 
