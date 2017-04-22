@@ -15,7 +15,6 @@ public class Main {
             problemSolver.graspAlgorithm(BIG_RCL);
             problemSolver.graspAlgorithm(SMALL_RCL);
         } catch(IndexOutOfBoundsException e) {
-            System.err.println("YOU MAY NEED TO SPECIFY THE PROBLEM´S FILE NAME.");
             e.printStackTrace();
         }
     }

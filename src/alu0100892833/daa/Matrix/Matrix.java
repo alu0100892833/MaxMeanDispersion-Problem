@@ -24,7 +24,7 @@ public class Matrix {
     /*******************************
      *********** ATTRIBUTES ********
      *************************/
-    private ArrayList<Integer> matriz;
+    private ArrayList<Double> matriz;
     private int m = 0;
     private int n = 0;
 
@@ -53,7 +53,7 @@ public class Matrix {
 
         matriz = new ArrayList(m * n);
         for(int i = 0; i < m * n; i++){
-            matriz.add(0);
+            matriz.add(0.0);
         }
     }
 
@@ -113,7 +113,7 @@ public class Matrix {
      * @param int indez indice dentro del vector del valor que queremos coger
      * @return int
      */
-    private int getValor(int index){
+    private double getValor(int index){
         return(matriz.get(index));
     }
 
@@ -123,7 +123,7 @@ public class Matrix {
      * @param int j posición de la columna
      * @return int
      */
-    public int get(int i, int j) {
+    public double get(int i, int j) {
         return(matriz.get(getPos(i, j)));
     }
 
@@ -133,7 +133,7 @@ public class Matrix {
      * @param int j posición de la columna
      * @param int valor
      */
-    public void set(int i, int j, int valor) {
+    public void set(int i, int j, double valor) {
         matriz.set(getPos(i, j), valor);
     }
 
@@ -147,7 +147,7 @@ public class Matrix {
 
         for(int i = 0; i < this.getM(); i++){
             for(int j = 0; j < this.getN(); j++){
-                salida = salida + matriz.get(getPos(i, j)) + " ";
+                salida += matriz.get(getPos(i, j)) + " ";
             }
             salida += "\n";
         }

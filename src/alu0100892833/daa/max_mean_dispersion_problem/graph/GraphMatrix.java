@@ -42,7 +42,7 @@ public class GraphMatrix {
      * @param to The other Node of the Link.
      * @param affinity The affinity that the Link will have set.
      */
-    public void addLink(int from, int to, int affinity) {
+    public void addLink(int from, int to, double affinity) {
         data.set(from - 1, to - 1, affinity);
         data.set(to - 1, from - 1, affinity);
     }

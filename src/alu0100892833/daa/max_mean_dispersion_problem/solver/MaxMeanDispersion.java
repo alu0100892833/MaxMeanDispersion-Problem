@@ -37,9 +37,10 @@ public class MaxMeanDispersion {
 
             for (int i = 1; i < problemGraph.getSize(); i++)
                 for (int j = i + 1; j <= problemGraph.getSize(); j++) {
-                    int value = Integer.parseInt(bReader.readLine());
+                    double value = Double.parseDouble(bReader.readLine());
                     problemGraph.addLink(i, j, value);
                 }
+            System.out.println(problemGraph);
         } catch (IOException e) {
             System.err.println("ERROR WHILE OPENING INPUT FILE.");
             e.printStackTrace();
@@ -108,6 +109,8 @@ public class MaxMeanDispersion {
             for (int to = from + 1; to < getSolution().size(); to++) {
                 numerator += problemGraph.getAffinity(getSolution().get(from), getSolution().get(to));
             }
+        if (getSolution().size() == 0)
+            return 0.0;
         return numerator / getSolution().size();
     }
 
@@ -142,9 +145,7 @@ public class MaxMeanDispersion {
         else
             addToSolution(identifier);
 
-        if (currentDispersion > newDispersion)
-            return false;
-        return true;
+        return (currentDispersion > newDispersion);
     }
 
     /**
@@ -164,6 +165,8 @@ public class MaxMeanDispersion {
         while (changed) {
             int nextBetterNode = getProblemGraph().getBetterNextNode(getSolution());
             changed = addIfImproves(nextBetterNode);
+            if (getSolution().size() == getProblemGraph().getSize())
+                changed = false;
         }
 
         // PRINT THE SOLUTION
@@ -201,6 +204,8 @@ public class MaxMeanDispersion {
                 removeFromSolution(nextWorstNode);
                 discardedCandidates.add(nextWorstNode);
             }
+            if (discardedCandidates.size() == getProblemGraph().getSize())
+                changed = false;
         }
 
         // PRINT THE SOLUTION
