@@ -1,11 +1,13 @@
 package alu0100892833.daa.max_mean_dispersion_problem.solver;
 
+import alu0100892833.daa.Matrix.Matrix;
 import alu0100892833.daa.Matrix.Position;
 import alu0100892833.daa.max_mean_dispersion_problem.graph.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -72,6 +74,10 @@ public class MaxMeanDispersion {
         return solution;
     }
 
+    public void setSolution(ArrayList<Integer> solution) {
+        this.solution = solution;
+    }
+
     public GraphMatrix getProblemGraph() {
         return problemGraph;
     }
@@ -115,6 +121,22 @@ public class MaxMeanDispersion {
     }
 
     /**
+     * This method calculates the average dispersion of the given solution.
+     * @param solution ArrayList that represents the solution.
+     * @return Average dispersion.
+     */
+    private double averageDispersion(ArrayList<Integer> solution) {
+        double numerator = 0.0;
+        if (solution.size() == 0)
+            return numerator;
+        for (int from = 0; from < solution.size() - 1; from++)
+            for (int to = from + 1; to < solution.size(); to++) {
+                numerator += problemGraph.getAffinity(solution.get(from), solution.get(to));
+            }
+        return numerator / getSolution().size();
+    }
+
+    /**
      * This method allows to add a new Node identifier to the solution, just if doing it improves that solution.
      * @param identifier
      * @return a boolean value that specifies if the value was added (true) or not (false)
@@ -145,7 +167,7 @@ public class MaxMeanDispersion {
         else
             addToSolution(identifier);
 
-        return (currentDispersion > newDispersion);
+        return (currentDispersion <= newDispersion);
     }
 
     /**
@@ -259,15 +281,67 @@ public class MaxMeanDispersion {
         return rcl;
     }
 
+    /**
+     * This method solves the problem using a multi-boot algorithm. It generates the specified number of initial solutions, and then performs the local search for each one of them.
+     * Lastly, the best solution of all is selected and printed.
+     * @param nBoots
+     */
     public void multiBootAlgorithm(int nBoots) {
         reset();
-        ArrayList<ArrayList<Integer>> initialSolutions = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> bestSolutions = new ArrayList<>();
         for (int i = 0; i < nBoots; i++) {
             graspAlgorithm(2);
-            System.out.println(getSolution());
-            initialSolutions.add(getSolution());
-            reset();
+            bestSolutions.add(localSearch(getSolution()));
         }
+        ArrayList<Integer> bestSolution = getSolution();
+        for (int i = 0; i < bestSolutions.size(); i++) {
+            if (averageDispersion(bestSolutions.get(i)) > averageDispersion(bestSolution))
+                bestSolution = bestSolutions.get(i);
+        }
+
+        // PRINT THE SOLUTION
+        System.out.println("===================================================================");
+        System.out.println("MULTI-BOOT ALGORITHM: \n" + getSolution());
+        System.out.println("AVERAGE DISPERSION: " + averageDispersion());
+        System.out.println("===================================================================");
+    }
+
+    /**
+     * This algorithm performs a local search around the environment of the initially given solution.
+     * @param solution Initial solution. Starting from this one, the local search will look for a better one.
+     */
+    private ArrayList<Integer> localSearch(ArrayList<Integer> solution) {
+        // FIRST, WE CREATE AN ArrayList WITH ALL NON-SELECTED NODES
+        ArrayList<Integer> excluded = new ArrayList<>();
+        for (int i = 1; i <= getProblemGraph().getSize(); i++)
+            if (!solution.contains(i))
+                excluded.add(i);
+
+        // START EXPLORING ITS NEIGHBORHOOD
+        // HAVING A SOLUTION WITH N ELEMENTS AND OTHER M EXCLUDED NODES
+        // WE DEFINE THE NEIGHBORHOOD OF THIS SOLUTION AS ALL SOLUTIONS RESULTING OF ELIMINATING A MEMBER OF THE SOLUTION AND INTRODUCING AN EXCLUDED NODE
+        // WE CHECK ALL THIS CASES AND SAVE THE CASE WHERE WE FIND THE HIGHEST DISPERSION
+        ArrayList<Integer> bestSolution = new ArrayList<>(solution);
+        setSolution(solution);
+        double dispersion = averageDispersion();
+        for (int i = 0; i < getSolution().size(); i++) {
+            for (int j = 0; j < excluded.size(); j++) {
+                int saveEliminatedNode = getSolution().get(i);
+                getSolution().remove(i);
+                getSolution().add(0, excluded.get(j));
+                if (averageDispersion() > dispersion) {
+                    bestSolution.clear();
+                    bestSolution = new ArrayList<>(getSolution());
+                    dispersion = averageDispersion();
+                }
+                // RESTORE THE ORIGINAL ONE SO WE CAN CONTINUE EXPLORING ITS NEIGHBORHOOD
+                getSolution().remove(0);
+                getSolution().add(saveEliminatedNode);
+            }
+        }
+
+        // FINALLY, DELIVER THE BEST SOLUTION FOUND
+        return bestSolution;
     }
 }
 
