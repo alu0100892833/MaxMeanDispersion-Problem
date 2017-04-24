@@ -18,6 +18,9 @@ import java.util.Random;
  */
 public class MaxMeanDispersion {
 
+    private static final int N_NEIGHBORHOOD_STRUCTS = 5;
+    private static final int FIRST_NEIGHBORHOOD = 1;
+
     private GraphMatrix problemGraph;
     private ArrayList<Integer> solution;
 
@@ -135,6 +138,19 @@ public class MaxMeanDispersion {
     }
 
     /**
+     * This method returns the non-selected nodes in a given solution.
+     * @param solution
+     * @return
+     */
+    private ArrayList<Integer> getExcludedNodes(ArrayList<Integer> solution) {
+        ArrayList<Integer> excluded = new ArrayList<>();
+        for (int i = 1; i <= getProblemGraph().getSize(); i++)
+            if (!solution.contains(i))
+                excluded.add(i);
+        return excluded;
+    }
+
+    /**
      * This method allows to add a new Node identifier to the solution, just if doing it improves that solution.
      * @param identifier
      * @return a boolean value that specifies if the value was added (true) or not (false)
@@ -166,6 +182,19 @@ public class MaxMeanDispersion {
             addToSolution(identifier);
 
         return (currentDispersion <= newDispersion);
+    }
+
+    /**
+     * This method creates a fast initial solution for the grasp and greedy algorithms.
+     * It stores this solution as the solution problem.
+     */
+    private void fastInitialSolution() {
+        ArrayList<Integer> solution = new ArrayList<>();
+        // ADD THE LINK WITH THE HIGHEST AFFINITY
+        Position highestAffinityLink = getProblemGraph().getHighestAffinityLink();
+        solution.add(highestAffinityLink.getX());
+        solution.add(highestAffinityLink.getY());
+        setSolution(solution);
     }
 
     /**
@@ -277,18 +306,6 @@ public class MaxMeanDispersion {
         }
     }
 
-    /**
-     * This method creates a fast initial solution for the grasp and greedy algorithms.
-     * It stores this solution as the solution problem.
-     */
-    private void fastInitialSolution() {
-        ArrayList<Integer> solution = new ArrayList<>();
-        // ADD THE LINK WITH THE HIGHEST AFFINITY
-        Position highestAffinityLink = getProblemGraph().getHighestAffinityLink();
-        solution.add(highestAffinityLink.getX());
-        solution.add(highestAffinityLink.getY());
-        setSolution(solution);
-    }
 
     /**
      * This method generates a Restricted List of Candidates for the GRASP algorithm. It just selects as many elements as indicated by the parameter, using the getBetterNextNode method.
@@ -340,48 +357,104 @@ public class MaxMeanDispersion {
     }
 
     /**
-     * This algorithm performs a local search around the environment of the initially given solution.
+     * This algorithm performs a local search in the neighborhood of the initially given solution.
      * @param solution Initial solution. Starting from this one, the local search will look for a better one.
+     * @return ArrayList with the best solution found in the neighborhood.
      */
     private ArrayList<Integer> localSearch(ArrayList<Integer> solution) {
-        //System.out.println("Local search to improve " + solution);
         // FIRST, WE CREATE AN ArrayList WITH ALL NON-SELECTED NODES
-        ArrayList<Integer> excluded = new ArrayList<>();
-        for (int i = 1; i <= getProblemGraph().getSize(); i++)
-            if (!solution.contains(i))
-                excluded.add(i);
-
-        //System.out.println("Other candidates: " + excluded);
+        ArrayList<Integer> excluded = getExcludedNodes(solution);
 
         // START EXPLORING ITS NEIGHBORHOOD
         // HAVING A SOLUTION WITH N ELEMENTS AND OTHER M EXCLUDED NODES
         // WE DEFINE THE NEIGHBORHOOD OF THIS SOLUTION AS ALL SOLUTIONS RESULTING OF ELIMINATING A MEMBER OF THE SOLUTION AND INTRODUCING AN EXCLUDED NODE
         // WE CHECK ALL THIS CASES AND SAVE THE CASE WHERE WE FIND THE HIGHEST DISPERSION
         ArrayList<Integer> bestSolution = new ArrayList<>(solution);
-        setSolution(solution);
-        double dispersion = averageDispersion();
-        for (int i = 0; i < getSolution().size(); i++) {
+        double dispersion = averageDispersion(bestSolution);
+        for (int i = 0; i < solution.size(); i++) {
             for (int j = 0; j < excluded.size(); j++) {
-                int saveEliminatedNode = getSolution().get(i);
-                getSolution().remove(i);
-                getSolution().add(0, excluded.get(j));
-                //System.out.println("Comparing " + bestSolution + "[" + averageDispersion(bestSolution)
-                //        + "] with " + getSolution() + "[" + averageDispersion() + "]");
-                if (averageDispersion() > dispersion) {
+                int saveEliminatedNode = solution.get(i);
+                solution.remove(i);
+                solution.add(0, excluded.get(j));
+                if (averageDispersion(solution) > dispersion) {
                     bestSolution.clear();
-                    bestSolution = new ArrayList<>(getSolution());
-                    dispersion = averageDispersion();
-                    //System.out.println("Found a new better solution: " + bestSolution);
+                    bestSolution = new ArrayList<>(solution);
+                    dispersion = averageDispersion(bestSolution);
                 }
                 // RESTORE THE ORIGINAL ONE SO WE CAN CONTINUE EXPLORING ITS NEIGHBORHOOD
-                getSolution().remove(0);
-                getSolution().add(saveEliminatedNode);
+                solution.remove(0);
+                solution.add(saveEliminatedNode);
             }
         }
 
         // FINALLY, DELIVER THE BEST SOLUTION FOUND
-        //System.out.println("Best solution found: " + bestSolution);
         return bestSolution;
+    }
+
+
+    /**
+     * This method solves the problem using a Basic Variable Neighborhood Search algorithm.
+     * Having N_NEIGHBORHOOD_STRUCTS neighborhood structures, it shakes and improves with the local search for each one of them until it finds a better one.
+     */
+    public void basicVNS() {
+        long startTime = System.currentTimeMillis();
+
+        // GET AN INITIAL SOLUTION PRODUCED BY A GRASP
+        final int RCL_SIZE = 3;
+        graspAlgorithm(RCL_SIZE, false);
+
+        // UNTIL THERE ARE NO MORE USEFUL NEIGHBORHOOD STRUCTURES
+        int neighborhoodStruct = FIRST_NEIGHBORHOOD;
+        while (neighborhoodStruct <= N_NEIGHBORHOOD_STRUCTS) {
+            // SHAKE TO GET A RANDOM SOLUTION ON THE GIVEN NEIGHBORHOOD
+            ArrayList<Integer> alternativeSolution = shake(getSolution(), neighborhoodStruct);
+            // PERFORM A LOCAL SEARCH TO IMPROVE IT
+            alternativeSolution = localSearch(alternativeSolution);
+            // IF THE NEW SOLUTION IS BETTER, SET IT AS THE ACTIVE ONE AND GO BACK TO THE FIRST NEIGHBORHOOD
+            if (averageDispersion() < averageDispersion(alternativeSolution)) {
+                setSolution(new ArrayList<>(alternativeSolution));
+                neighborhoodStruct = FIRST_NEIGHBORHOOD;
+            } else {             // TRY WITH THE NEXT NEIGHBORHOOD
+                neighborhoodStruct++;
+            }
+        }
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+
+        // PRINT THE SOLUTION
+        System.out.println("===================================================================");
+        System.out.println("SOLUTION: " + getSolution());
+        System.out.println("AVERAGE DISPERSION: " + averageDispersion());
+        System.out.println("TIME: " + elapsedTime + " milliseconds");
+        System.out.println("===================================================================");
+    }
+
+    /**
+     * This method produces a random solution in the specified neighborhood of the given solution.
+     * @param solution Given solution, from which the new one will be produced.
+     * @param kNeighborHoodStruct The used neighborhood structure.
+     * @return The generated solution.
+     */
+    private ArrayList<Integer> shake(ArrayList<Integer> solution, int kNeighborHoodStruct) {
+        ArrayList<Integer> newSolution = new ArrayList<>(solution);
+        ArrayList<Integer> excluded = getExcludedNodes(newSolution);
+        Random randomNode = new Random();
+
+        // IF THERE ARE ANY NODES OUTSIDE OF THE SOLUTION
+        if (!excluded.isEmpty()) {
+            // CHANGE AS MANY RANDOM NODES AS THE NEIGHBORHOOD STRUCTURE
+            for (int i = 0; i < kNeighborHoodStruct; i++) {
+                int removedNodeIndex = randomNode.nextInt(newSolution.size());
+                int addedNodeIndex = randomNode.nextInt(excluded.size());
+
+                excluded.add(newSolution.get(removedNodeIndex));
+                newSolution.add(excluded.get(addedNodeIndex));
+                excluded.remove(addedNodeIndex);
+                newSolution.remove(removedNodeIndex);
+            }
+        }
+        return newSolution;
     }
 }
 
