@@ -1,13 +1,11 @@
 package alu0100892833.daa.max_mean_dispersion_problem.solver;
 
-import alu0100892833.daa.Matrix.Matrix;
 import alu0100892833.daa.Matrix.Position;
 import alu0100892833.daa.max_mean_dispersion_problem.graph.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -42,7 +40,7 @@ public class MaxMeanDispersion {
                     double value = Double.parseDouble(bReader.readLine());
                     problemGraph.addLink(i, j, value);
                 }
-            System.out.println(problemGraph);
+            //System.out.println(problemGraph);
         } catch (IOException e) {
             System.err.println("ERROR WHILE OPENING INPUT FILE.");
             e.printStackTrace();
@@ -175,11 +173,9 @@ public class MaxMeanDispersion {
      */
     public void greedyConstructiveAlgorithm() {
         reset();
-
+        long startTime = System.currentTimeMillis();
         // ADD THE LINK WITH THE HIGHEST AFFINITY
-        Position highestAffinityLink = getProblemGraph().getHighestAffinityLink();
-        addToSolution(highestAffinityLink.getX());
-        addToSolution(highestAffinityLink.getY());
+        fastInitialSolution();
 
         // LOOK FOR THE NEXT NODE THAT IMPROVES THE SOLUTION
         // ONCE THE SOLUTION IS NOT CHANGED, THE ALGORITHM HAS FINISHED
@@ -191,10 +187,14 @@ public class MaxMeanDispersion {
                 changed = false;
         }
 
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+
         // PRINT THE SOLUTION
         System.out.println("===================================================================");
-        System.out.println("GREEDY CONSTRUCTIVE ALGORITHM: " + getSolution());
+        System.out.println("SOLUTION: " + getSolution());
         System.out.println("AVERAGE DISPERSION: " + averageDispersion());
+        System.out.println("TIME: " + elapsedTime + " milliseconds");
         System.out.println("===================================================================");
     }
 
@@ -204,6 +204,7 @@ public class MaxMeanDispersion {
     public void greedyDestructiveAlgorithm() {
         reset();
         boolean changed = true;
+        long startTime = System.currentTimeMillis();
         ArrayList<Integer> discardedCandidates = new ArrayList<>();
 
         // CREATE AN INITIAL SOLUTION WITH ALL NODES OF THE GRAPH
@@ -230,10 +231,14 @@ public class MaxMeanDispersion {
                 changed = false;
         }
 
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+
         // PRINT THE SOLUTION
         System.out.println("===================================================================");
-        System.out.println("GREEDY DESTRUCTIVE ALGORITHM: " + getSolution());
+        System.out.println("SOLUTION: " + getSolution());
         System.out.println("AVERAGE DISPERSION: " + averageDispersion());
+        System.out.println("TIME: " + elapsedTime + " milliseconds");
         System.out.println("===================================================================");
     }
 
@@ -242,9 +247,11 @@ public class MaxMeanDispersion {
      * This method solves the problem using a GRASP algorithm. It can also be used to generate an initial solution for more complex algorithms.
      * @param rclSize The size of the Restricted Candidate List.
      */
-    public void graspAlgorithm(int rclSize) {
+    public void graspAlgorithm(int rclSize, boolean print) {
         reset();
         Random randSelector = new Random();
+        long startTime = System.currentTimeMillis();
+        fastInitialSolution();
 
         boolean changed = true;
         while (changed) {
@@ -253,13 +260,34 @@ public class MaxMeanDispersion {
                 break;
             int selectedCandidate = rcl.get(randSelector.nextInt(rcl.size()));
             changed = addIfImproves(selectedCandidate);
+            if (changed)
+                setSolution(localSearch(getSolution()));
         }
 
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+
         // PRINT THE SOLUTION
-        System.out.println("===================================================================");
-        System.out.println("GRASP ALGORITHM USING A RCL OF " + rclSize + " ELEMENTS: \n" + getSolution());
-        System.out.println("AVERAGE DISPERSION: " + averageDispersion());
-        System.out.println("===================================================================");
+        if (print) {
+            System.out.println("===================================================================");
+            System.out.println("SOLUTION: " + getSolution());
+            System.out.println("AVERAGE DISPERSION: " + averageDispersion());
+            System.out.println("TIME: " + elapsedTime + " milliseconds");
+            System.out.println("===================================================================");
+        }
+    }
+
+    /**
+     * This method creates a fast initial solution for the grasp and greedy algorithms.
+     * It stores this solution as the solution problem.
+     */
+    private void fastInitialSolution() {
+        ArrayList<Integer> solution = new ArrayList<>();
+        // ADD THE LINK WITH THE HIGHEST AFFINITY
+        Position highestAffinityLink = getProblemGraph().getHighestAffinityLink();
+        solution.add(highestAffinityLink.getX());
+        solution.add(highestAffinityLink.getY());
+        setSolution(solution);
     }
 
     /**
@@ -288,9 +316,10 @@ public class MaxMeanDispersion {
      */
     public void multiBootAlgorithm(int nBoots) {
         reset();
+        long startTime = System.currentTimeMillis();
         ArrayList<ArrayList<Integer>> bestSolutions = new ArrayList<>();
         for (int i = 0; i < nBoots; i++) {
-            graspAlgorithm(2);
+            graspAlgorithm(2, false);
             bestSolutions.add(localSearch(getSolution()));
         }
         ArrayList<Integer> bestSolution = getSolution();
@@ -299,10 +328,14 @@ public class MaxMeanDispersion {
                 bestSolution = bestSolutions.get(i);
         }
 
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+
         // PRINT THE SOLUTION
         System.out.println("===================================================================");
-        System.out.println("MULTI-BOOT ALGORITHM: \n" + getSolution());
+        System.out.println("SOLUTION: " + getSolution());
         System.out.println("AVERAGE DISPERSION: " + averageDispersion());
+        System.out.println("TIME: " + elapsedTime + " milliseconds");
         System.out.println("===================================================================");
     }
 
@@ -311,11 +344,14 @@ public class MaxMeanDispersion {
      * @param solution Initial solution. Starting from this one, the local search will look for a better one.
      */
     private ArrayList<Integer> localSearch(ArrayList<Integer> solution) {
+        //System.out.println("Local search to improve " + solution);
         // FIRST, WE CREATE AN ArrayList WITH ALL NON-SELECTED NODES
         ArrayList<Integer> excluded = new ArrayList<>();
         for (int i = 1; i <= getProblemGraph().getSize(); i++)
             if (!solution.contains(i))
                 excluded.add(i);
+
+        //System.out.println("Other candidates: " + excluded);
 
         // START EXPLORING ITS NEIGHBORHOOD
         // HAVING A SOLUTION WITH N ELEMENTS AND OTHER M EXCLUDED NODES
@@ -329,10 +365,13 @@ public class MaxMeanDispersion {
                 int saveEliminatedNode = getSolution().get(i);
                 getSolution().remove(i);
                 getSolution().add(0, excluded.get(j));
+                //System.out.println("Comparing " + bestSolution + "[" + averageDispersion(bestSolution)
+                //        + "] with " + getSolution() + "[" + averageDispersion() + "]");
                 if (averageDispersion() > dispersion) {
                     bestSolution.clear();
                     bestSolution = new ArrayList<>(getSolution());
                     dispersion = averageDispersion();
+                    //System.out.println("Found a new better solution: " + bestSolution);
                 }
                 // RESTORE THE ORIGINAL ONE SO WE CAN CONTINUE EXPLORING ITS NEIGHBORHOOD
                 getSolution().remove(0);
@@ -341,6 +380,7 @@ public class MaxMeanDispersion {
         }
 
         // FINALLY, DELIVER THE BEST SOLUTION FOUND
+        //System.out.println("Best solution found: " + bestSolution);
         return bestSolution;
     }
 }
