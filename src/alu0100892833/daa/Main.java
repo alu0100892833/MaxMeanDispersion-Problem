@@ -45,7 +45,7 @@ public class Main {
                 System.out.println("============= GRASP WITH " + rcl + " CANDIDATES ===================");
                 for (int i = 1; i <= EXECUTIONS; i++) {
                     System.out.println("# EXECUTION " + i);
-                    problemSolver.graspAlgorithm(rcl, true);
+                    problemSolver.graspAlgorithm(rcl, true, true);
                 }
             }
 

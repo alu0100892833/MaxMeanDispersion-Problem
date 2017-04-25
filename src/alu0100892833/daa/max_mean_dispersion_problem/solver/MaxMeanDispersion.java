@@ -18,7 +18,7 @@ import java.util.Random;
  */
 public class MaxMeanDispersion {
 
-    private static final int N_NEIGHBORHOOD_STRUCTS = 5;
+    private static final int N_NEIGHBORHOOD_STRUCTS = 3;
     private static final int FIRST_NEIGHBORHOOD = 1;
 
     private GraphMatrix problemGraph;
@@ -276,7 +276,7 @@ public class MaxMeanDispersion {
      * This method solves the problem using a GRASP algorithm. It can also be used to generate an initial solution for more complex algorithms.
      * @param rclSize The size of the Restricted Candidate List.
      */
-    public void graspAlgorithm(int rclSize, boolean print) {
+    public void graspAlgorithm(int rclSize, boolean improve, boolean print) {
         reset();
         Random randSelector = new Random();
         long startTime = System.currentTimeMillis();
@@ -289,7 +289,7 @@ public class MaxMeanDispersion {
                 break;
             int selectedCandidate = rcl.get(randSelector.nextInt(rcl.size()));
             changed = addIfImproves(selectedCandidate);
-            if (changed)
+            if ((changed) && (improve))
                 setSolution(localSearch(getSolution()));
         }
 
@@ -336,7 +336,7 @@ public class MaxMeanDispersion {
         long startTime = System.currentTimeMillis();
         ArrayList<ArrayList<Integer>> bestSolutions = new ArrayList<>();
         for (int i = 0; i < nBoots; i++) {
-            graspAlgorithm(2, false);
+            graspAlgorithm(2, false, false);
             bestSolutions.add(localSearch(getSolution()));
         }
         ArrayList<Integer> bestSolution = getSolution();
@@ -401,7 +401,7 @@ public class MaxMeanDispersion {
 
         // GET AN INITIAL SOLUTION PRODUCED BY A GRASP
         final int RCL_SIZE = 3;
-        graspAlgorithm(RCL_SIZE, false);
+        graspAlgorithm(RCL_SIZE, true, false);
 
         // UNTIL THERE ARE NO MORE USEFUL NEIGHBORHOOD STRUCTURES
         int neighborhoodStruct = FIRST_NEIGHBORHOOD;
