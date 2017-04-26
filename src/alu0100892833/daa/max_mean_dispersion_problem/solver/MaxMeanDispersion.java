@@ -275,6 +275,8 @@ public class MaxMeanDispersion {
     /**
      * This method solves the problem using a GRASP algorithm. It can also be used to generate an initial solution for more complex algorithms.
      * @param rclSize The size of the Restricted Candidate List.
+     * @param improve Indicates if the algorithm should improved each solution with a local search.
+     * @param print Indicates if the found solution should be printed on screen.
      */
     public void graspAlgorithm(int rclSize, boolean improve, boolean print) {
         reset();
