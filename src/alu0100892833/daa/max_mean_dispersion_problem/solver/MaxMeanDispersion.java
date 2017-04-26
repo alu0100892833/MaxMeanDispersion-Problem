@@ -170,6 +170,8 @@ public class MaxMeanDispersion {
      * @return True or false, if it improves the solution or not.
      */
     private boolean checkIfImproves(int identifier, boolean adding) {
+        if ((identifier < 0) || (identifier > getProblemGraph().getSize()))
+            return false;
         double currentDispersion = averageDispersion();
         if (adding)
             addToSolution(identifier);
@@ -287,7 +289,7 @@ public class MaxMeanDispersion {
         boolean changed = true;
         while (changed) {
             ArrayList<Integer> rcl = generateRCL(rclSize, new ArrayList<>(getSolution()));
-            if (rcl == null)
+            if (rcl.isEmpty())
                 break;
             int selectedCandidate = rcl.get(randSelector.nextInt(rcl.size()));
             changed = addIfImproves(selectedCandidate);
@@ -320,7 +322,7 @@ public class MaxMeanDispersion {
         while (rcl.size() < length) {
             int newCandidate = getProblemGraph().getBetterNextNode(excluding);
             if (newCandidate == -1)
-                return null;
+                return rcl;
             if (checkIfImproves(newCandidate, true))
                 rcl.add(newCandidate);
             excluding.add(newCandidate);
