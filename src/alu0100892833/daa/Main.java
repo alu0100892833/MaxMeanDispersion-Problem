@@ -11,7 +11,7 @@ public class Main {
 
             final int EXECUTIONS = 5;
             final int MINIMUM_RCL = 2;
-            final int MAXIMUM_RCL = 5;
+            final int MAXIMUM_RCL = 3;
             final int MINIMUM_N_BOOTS = 2;
             final int MAXIMUM_N_BOOTS = 32;
 

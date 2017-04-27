@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="0a5dbf43-4d11-4029-ad4a-df1a151d4a5d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/Informe.pages" afterPath="$PROJECT_DIR$/docs/Informe.pages" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/P4MaxMeanDispersion/alu0100892833/daa/Main.class" afterPath="$PROJECT_DIR$/out/production/P4MaxMeanDispersion/alu0100892833/daa/Main.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/P4MaxMeanDispersion/alu0100892833/daa/max_mean_dispersion_problem/solver/MaxMeanDispersion.class" afterPath="$PROJECT_DIR$/out/production/P4MaxMeanDispersion/alu0100892833/daa/max_mean_dispersion_problem/solver/MaxMeanDispersion.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/alu0100892833/daa/Main.java" afterPath="$PROJECT_DIR$/src/alu0100892833/daa/Main.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/alu0100892833/daa/max_mean_dispersion_problem/solver/MaxMeanDispersion.java" afterPath="$PROJECT_DIR$/src/alu0100892833/daa/max_mean_dispersion_problem/solver/MaxMeanDispersion.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -20,8 +23,8 @@
       <file leaf-file-name="MaxMeanDispersion.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/alu0100892833/daa/max_mean_dispersion_problem/solver/MaxMeanDispersion.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4176">
-              <caret line="455" column="69" lean-forward="false" selection-start-line="455" selection-start-column="69" selection-end-line="455" selection-end-column="69" />
+            <state relative-caret-position="120">
+              <caret line="20" column="55" lean-forward="false" selection-start-line="20" selection-start-column="55" selection-end-line="20" selection-end-column="55" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2573#2574#0" expanded="true" />
@@ -38,7 +41,7 @@
       <file leaf-file-name="GraphMatrix.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/alu0100892833/daa/max_mean_dispersion_problem/graph/GraphMatrix.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1872">
+            <state relative-caret-position="371">
               <caret line="111" column="0" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -50,8 +53,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/alu0100892833/daa/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="17" column="12" lean-forward="false" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
+            <state relative-caret-position="233">
+              <caret line="14" column="42" lean-forward="true" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -105,8 +108,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="y" value="22" />
     <option name="width" value="1920" />
-    <option name="height" value="1080" />
+    <option name="height" value="978" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -237,7 +241,6 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="FullScreen" value="true" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
   </component>
   <component name="RunDashboard">
@@ -679,7 +682,7 @@
       <workItem from="1492962341744" duration="3186000" />
       <workItem from="1493045850355" duration="8528000" />
       <workItem from="1493220657261" duration="3395000" />
-      <workItem from="1493306727788" duration="1427000" />
+      <workItem from="1493306727788" duration="5883000" />
     </task>
     <task id="LOCAL-00001" summary="Hechos el primer voraz y el GRASP.">
       <created>1492639173636</created>
@@ -730,15 +733,21 @@
       <option name="project" value="LOCAL" />
       <updated>1493222953801</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Algorithms, by now, are completely finished. Changed the timer of all algorithms for a counter of operations, because the timer was not providing any useful information.">
+      <created>1493309250056</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1493309250056</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39770000" />
+    <option name="totallyTimeSpent" value="44226000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="22" width="1920" height="978" extended-state="0" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -750,12 +759,12 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32913843" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6979671" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6272825" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13385417" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19635417" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -785,11 +794,12 @@
     <MESSAGE value="Just VNS left." />
     <MESSAGE value="All algorithms working, but still need to check all of them again." />
     <MESSAGE value="Apparently, every algorithm is working perfectly. Solved a failure that made the program clear every RCL if they were not of the desired size." />
-    <option name="LAST_COMMIT_MESSAGE" value="Apparently, every algorithm is working perfectly. Solved a failure that made the program clear every RCL if they were not of the desired size." />
+    <MESSAGE value="Algorithms, by now, are completely finished. Changed the timer of all algorithms for a counter of operations, because the timer was not providing any useful information." />
+    <option name="LAST_COMMIT_MESSAGE" value="Algorithms, by now, are completely finished. Changed the timer of all algorithms for a counter of operations, because the timer was not providing any useful information." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="48" />
+      <option name="time" value="52" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -968,7 +978,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/alu0100892833/daa/max_mean_dispersion_problem/graph/GraphMatrix.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1872">
+        <state relative-caret-position="371">
           <caret line="111" column="0" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -978,8 +988,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/alu0100892833/daa/max_mean_dispersion_problem/solver/MaxMeanDispersion.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4176">
-          <caret line="455" column="69" lean-forward="false" selection-start-line="455" selection-start-column="69" selection-end-line="455" selection-end-column="69" />
+        <state relative-caret-position="120">
+          <caret line="20" column="55" lean-forward="false" selection-start-line="20" selection-start-column="55" selection-end-line="20" selection-end-column="55" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2573#2574#0" expanded="true" />
@@ -994,8 +1004,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/alu0100892833/daa/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="17" column="12" lean-forward="false" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
+        <state relative-caret-position="233">
+          <caret line="14" column="42" lean-forward="true" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
           <folding />
         </state>
       </provider>

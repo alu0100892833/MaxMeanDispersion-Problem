@@ -303,20 +303,17 @@ public class MaxMeanDispersion {
     public void graspAlgorithm(int rclSize, boolean improve, boolean print) {
         reset();
         Random randSelector = new Random();
-        fastInitialSolution();
-        operation();
 
-        boolean changed = true;
-        while (changed) {
+        while (true) {
             ArrayList<Integer> rcl = generateRCL(rclSize, new ArrayList<>(getSolution()));
             operation();
             if (rcl.isEmpty())
                 break;
             int selectedCandidate = rcl.get(randSelector.nextInt(rcl.size()));
             operation();
-            changed = addIfImproves(selectedCandidate);
+            addToSolution(selectedCandidate);
             operation();
-            if ((changed) && (improve)) {
+            if (improve) {
                 setSolution(localSearch(getSolution()));
                 operation();
             }
@@ -359,13 +356,20 @@ public class MaxMeanDispersion {
      */
     public void multiBootAlgorithm(int nBoots) {
         reset();
+
+        // IT IS NECESSARY TO DECLARE AN AUXILIARY COUNTER OF OPERATIONS, BECAUSE CALLING GRASP RESETS THE DEFAULT COUNTER
+        int auxiliaryCounterOfOperations = 0;
+
         ArrayList<ArrayList<Integer>> bestSolutions = new ArrayList<>();
         for (int i = 0; i < nBoots; i++) {
+            auxiliaryCounterOfOperations += getnOperations();
             graspAlgorithm(2, false, false);
             operation();
             bestSolutions.add(localSearch(getSolution()));
             operation();
         }
+
+        setnOperations(auxiliaryCounterOfOperations);
         ArrayList<Integer> bestSolution = getSolution();
         for (int i = 0; i < bestSolutions.size(); i++) {
             if (averageDispersion(bestSolutions.get(i)) > averageDispersion(bestSolution)) {
