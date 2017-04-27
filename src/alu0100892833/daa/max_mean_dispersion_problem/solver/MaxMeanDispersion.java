@@ -20,9 +20,11 @@ public class MaxMeanDispersion {
 
     private static final int N_NEIGHBORHOOD_STRUCTS = 3;
     private static final int FIRST_NEIGHBORHOOD = 1;
+    private static final int STARTING_N_OPERATIONS = 0;
 
     private GraphMatrix problemGraph;
     private ArrayList<Integer> solution;
+    private int nOperations;
 
 
     /**
@@ -31,6 +33,7 @@ public class MaxMeanDispersion {
      * @param filename Name of the file that specifies the graph.
      */
     public MaxMeanDispersion(String filename) {
+        nOperations = 0;
         solution = new ArrayList<>();
         BufferedReader bReader = null;
         try {
@@ -63,6 +66,15 @@ public class MaxMeanDispersion {
      */
     public void reset() {
         solution.clear();
+        setnOperations(STARTING_N_OPERATIONS);
+    }
+
+    /**
+     * Increments the number of executed operations by one.
+     * It should be called each time an operation is executed.
+     */
+    private void operation() {
+        nOperations++;
     }
 
 
@@ -81,6 +93,14 @@ public class MaxMeanDispersion {
 
     public GraphMatrix getProblemGraph() {
         return problemGraph;
+    }
+
+    public int getnOperations() {
+        return nOperations;
+    }
+
+    public void setnOperations(int nOperations) {
+        this.nOperations = nOperations;
     }
 
     /********************************************/
@@ -204,28 +224,28 @@ public class MaxMeanDispersion {
      */
     public void greedyConstructiveAlgorithm() {
         reset();
-        long startTime = System.currentTimeMillis();
+
         // ADD THE LINK WITH THE HIGHEST AFFINITY
         fastInitialSolution();
+        operation();
 
         // LOOK FOR THE NEXT NODE THAT IMPROVES THE SOLUTION
         // ONCE THE SOLUTION IS NOT CHANGED, THE ALGORITHM HAS FINISHED
         boolean changed = true;
         while (changed) {
             int nextBetterNode = getProblemGraph().getBetterNextNode(getSolution());
+            operation();
             changed = addIfImproves(nextBetterNode);
+            operation();
             if (getSolution().size() == getProblemGraph().getSize())
                 changed = false;
         }
-
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
 
         // PRINT THE SOLUTION
         System.out.println("===================================================================");
         System.out.println("SOLUTION: " + getSolution());
         System.out.println("AVERAGE DISPERSION: " + averageDispersion());
-        System.out.println("TIME: " + elapsedTime + " milliseconds");
+        System.out.println("OPERATIONS EXECUTED: " + getnOperations());
         System.out.println("===================================================================");
     }
 
@@ -235,7 +255,7 @@ public class MaxMeanDispersion {
     public void greedyDestructiveAlgorithm() {
         reset();
         boolean changed = true;
-        long startTime = System.currentTimeMillis();
+
         ArrayList<Integer> discardedCandidates = new ArrayList<>();
 
         // CREATE AN INITIAL SOLUTION WITH ALL NODES OF THE GRAPH
@@ -248,11 +268,13 @@ public class MaxMeanDispersion {
         removeFromSolution(lowestAffinityLink.getY());
         discardedCandidates.add(lowestAffinityLink.getX());
         discardedCandidates.add(lowestAffinityLink.getY());
+        operation();
 
         // LOOK FOR THE NEXT NODE TO ELIMINATE, SO THE SOLUTION CAN BE IMPROVED
         // ONCE THE SOLUTION IS NOT CHANGED, THE ALGORITHM HAS FINISHED
         while (changed) {
             int nextWorstNode = getProblemGraph().getWorstNextNode(discardedCandidates);
+            operation();
             changed = checkIfImproves(nextWorstNode, false);
             if (changed) {
                 removeFromSolution(nextWorstNode);
@@ -260,16 +282,14 @@ public class MaxMeanDispersion {
             }
             if (discardedCandidates.size() == getProblemGraph().getSize())
                 changed = false;
+            operation();
         }
-
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
 
         // PRINT THE SOLUTION
         System.out.println("===================================================================");
         System.out.println("SOLUTION: " + getSolution());
         System.out.println("AVERAGE DISPERSION: " + averageDispersion());
-        System.out.println("TIME: " + elapsedTime + " milliseconds");
+        System.out.println("OPERATIONS EXECUTED: " + getnOperations());
         System.out.println("===================================================================");
     }
 
@@ -283,29 +303,31 @@ public class MaxMeanDispersion {
     public void graspAlgorithm(int rclSize, boolean improve, boolean print) {
         reset();
         Random randSelector = new Random();
-        long startTime = System.currentTimeMillis();
         fastInitialSolution();
+        operation();
 
         boolean changed = true;
         while (changed) {
             ArrayList<Integer> rcl = generateRCL(rclSize, new ArrayList<>(getSolution()));
+            operation();
             if (rcl.isEmpty())
                 break;
             int selectedCandidate = rcl.get(randSelector.nextInt(rcl.size()));
+            operation();
             changed = addIfImproves(selectedCandidate);
-            if ((changed) && (improve))
+            operation();
+            if ((changed) && (improve)) {
                 setSolution(localSearch(getSolution()));
+                operation();
+            }
         }
-
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
 
         // PRINT THE SOLUTION
         if (print) {
             System.out.println("===================================================================");
             System.out.println("SOLUTION: " + getSolution());
             System.out.println("AVERAGE DISPERSION: " + averageDispersion());
-            System.out.println("TIME: " + elapsedTime + " milliseconds");
+            System.out.println("OPERATIONS EXECUTED: " + getnOperations());
             System.out.println("===================================================================");
         }
     }
@@ -337,26 +359,26 @@ public class MaxMeanDispersion {
      */
     public void multiBootAlgorithm(int nBoots) {
         reset();
-        long startTime = System.currentTimeMillis();
         ArrayList<ArrayList<Integer>> bestSolutions = new ArrayList<>();
         for (int i = 0; i < nBoots; i++) {
             graspAlgorithm(2, false, false);
+            operation();
             bestSolutions.add(localSearch(getSolution()));
+            operation();
         }
         ArrayList<Integer> bestSolution = getSolution();
         for (int i = 0; i < bestSolutions.size(); i++) {
-            if (averageDispersion(bestSolutions.get(i)) > averageDispersion(bestSolution))
+            if (averageDispersion(bestSolutions.get(i)) > averageDispersion(bestSolution)) {
                 bestSolution = bestSolutions.get(i);
+                operation();
+            }
         }
-
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
 
         // PRINT THE SOLUTION
         System.out.println("===================================================================");
         System.out.println("SOLUTION: " + getSolution());
         System.out.println("AVERAGE DISPERSION: " + averageDispersion());
-        System.out.println("TIME: " + elapsedTime + " milliseconds");
+        System.out.println("OPERATIONS EXECUTED: " + getnOperations());
         System.out.println("===================================================================");
     }
 
@@ -401,36 +423,37 @@ public class MaxMeanDispersion {
      * Having N_NEIGHBORHOOD_STRUCTS neighborhood structures, it shakes and improves with the local search for each one of them until it finds a better one.
      */
     public void basicVNS() {
-        long startTime = System.currentTimeMillis();
+        reset();
 
         // GET AN INITIAL SOLUTION PRODUCED BY A GRASP
         final int RCL_SIZE = 3;
         graspAlgorithm(RCL_SIZE, true, false);
+        operation();
 
         // UNTIL THERE ARE NO MORE USEFUL NEIGHBORHOOD STRUCTURES
         int neighborhoodStruct = FIRST_NEIGHBORHOOD;
         while (neighborhoodStruct <= N_NEIGHBORHOOD_STRUCTS) {
             // SHAKE TO GET A RANDOM SOLUTION ON THE GIVEN NEIGHBORHOOD
             ArrayList<Integer> alternativeSolution = shake(getSolution(), neighborhoodStruct);
+            operation();
             // PERFORM A LOCAL SEARCH TO IMPROVE IT
             alternativeSolution = localSearch(alternativeSolution);
+            operation();
             // IF THE NEW SOLUTION IS BETTER, SET IT AS THE ACTIVE ONE AND GO BACK TO THE FIRST NEIGHBORHOOD
             if (averageDispersion() < averageDispersion(alternativeSolution)) {
                 setSolution(new ArrayList<>(alternativeSolution));
+                operation();
                 neighborhoodStruct = FIRST_NEIGHBORHOOD;
             } else {             // TRY WITH THE NEXT NEIGHBORHOOD
                 neighborhoodStruct++;
             }
         }
 
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-
         // PRINT THE SOLUTION
         System.out.println("===================================================================");
         System.out.println("SOLUTION: " + getSolution());
         System.out.println("AVERAGE DISPERSION: " + averageDispersion());
-        System.out.println("TIME: " + elapsedTime + " milliseconds");
+        System.out.println("OPERATIONS EXECUTED: " + getnOperations());
         System.out.println("===================================================================");
     }
 
