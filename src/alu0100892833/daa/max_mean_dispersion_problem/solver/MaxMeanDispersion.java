@@ -487,6 +487,52 @@ public class MaxMeanDispersion {
         }
         return newSolution;
     }
+
+    /**
+     * Hybrid MultiBoot algorithm, kind of a mix between GRASP, VNS and MultiBoot.
+     * This code was written during the correction session.
+     */
+    public void hybridMultiBootGraspVNS() {
+        reset();
+        int iterator = 1;
+        ArrayList<Integer> bestSolution = new ArrayList<>();
+        // CREATE AN INITIAL SOLUTION WITH ALL NODES OF THE GRAPH
+        for (int i = 1; i <= getProblemGraph().getSize(); i++)
+            bestSolution.add(i);
+        operation();
+
+        while (iterator != 5) {
+            int saveOperations = getnOperations();
+            graspAlgorithm(2, false, false);
+            setnOperations(getnOperations() + saveOperations);
+            ArrayList<Integer> solution = new ArrayList<>(getSolution());
+            int k = 1;
+            while (k != 4) {
+                ArrayList<Integer> newSolution = localSearch(shake(solution, k));
+                operation(); operation();
+                if (averageDispersion(newSolution) > averageDispersion(solution)) {
+                    solution = new ArrayList<>(newSolution);
+                    k = 1;
+                    operation();
+                } else
+                    k++;
+            }
+
+            if (averageDispersion(solution) > averageDispersion(bestSolution)) {
+                bestSolution = new ArrayList<>(solution);
+                operation();
+            }
+            iterator++;
+        }
+        setSolution(bestSolution);
+
+        // PRINT THE SOLUTION
+        System.out.println("===================================================================");
+        System.out.println("SOLUTION: " + getSolution());
+        System.out.println("AVERAGE DISPERSION: " + averageDispersion());
+        System.out.println("OPERATIONS EXECUTED: " + getnOperations());
+        System.out.println("===================================================================");
+    }
 }
 
 

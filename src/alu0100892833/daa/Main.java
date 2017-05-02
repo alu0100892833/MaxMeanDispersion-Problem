@@ -77,6 +77,19 @@ public class Main {
             }
 
 
+            /**
+             * CÓDIGO DE LA MODIFICACIÓN - EJECUCIÓN DEL ALGORITMO
+             */
+            System.out.println("===================================================================");
+            System.out.println("===================================================================");
+            System.out.println("===================================================================");
+            System.out.println("===================================================================");
+            System.out.println();
+            System.out.println("====================== HYBRID ========================");
+            System.out.println("===================================================================");
+            problemSolver.hybridMultiBootGraspVNS();
+
+
         } catch(IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
